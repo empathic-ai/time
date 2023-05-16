@@ -1187,4 +1187,12 @@ impl From<OffsetDateTime> for crate::SystemTime {
         datetime.0.into()
     }
 }
+
+
+#[cfg(not(feature = "std"))]
+impl From<SystemTime> for OffsetDateTime {
+    fn from(system_time: SystemTime) -> Self {
+        Self(Inner::from(system_time))
+    }
+}
 // endregion trait impls
