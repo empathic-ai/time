@@ -9,6 +9,8 @@ use core::ops::{Add, AddAssign, Sub, SubAssign};
 //use std::time::Duration;
 use core::time::{Duration};
 
+pub const UNIX_EPOCH: SystemTime = SystemTime(0);
+
 /// See [`std::time::SystemTime`].
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct SystemTime(i64);

@@ -347,6 +347,8 @@ mod weekday;
 pub mod system_time;
 pub use system_time::*;
 
+pub const UNIX_EPOCH: SystemTime = SystemTime::UNIX_EPOCH;
+
 // Not public yet.
 use time_core::convert;
 
