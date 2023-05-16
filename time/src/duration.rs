@@ -607,6 +607,10 @@ impl Duration {
         ))
     }
 
+    pub fn from_millis(millis: i64) -> Self {
+        Self::milliseconds(millis)
+    }
+
     /// Create a new `Duration` with the given number of milliseconds.
     ///
     /// ```rust
@@ -753,6 +757,10 @@ impl Duration {
     /// ```
     pub fn as_seconds_f32(self) -> f32 {
         self.seconds as f32 + self.nanoseconds as f32 / Nanosecond.per(Second) as f32
+    }
+
+    pub const fn as_millis(self) -> i128 {
+        self.whole_milliseconds()
     }
 
     /// Get the number of whole milliseconds in the duration.

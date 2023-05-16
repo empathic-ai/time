@@ -7,7 +7,7 @@ use core::fmt::{self, Display, Formatter};
 //use std::ops::{Add, AddAssign, Sub, SubAssign};
 use core::ops::{Add, AddAssign, Sub, SubAssign};
 //use std::time::Duration;
-use core::time::{Duration};
+use crate::{Duration};
 
 pub const UNIX_EPOCH: SystemTime = SystemTime(0);
 
