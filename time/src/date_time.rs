@@ -1164,7 +1164,11 @@ impl From<DateTime<offset_kind::Fixed>> for js_sys::Date {
     }
 }
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
 impl From<DateTime<offset_kind::Fixed>> for crate::SystemTime {
     fn from(datetime: DateTime<offset_kind::Fixed>) -> Self {
         // new Date() takes milliseconds
@@ -1174,7 +1178,11 @@ impl From<DateTime<offset_kind::Fixed>> for crate::SystemTime {
     }
 }
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
 impl From<crate::SystemTime> for DateTime<offset_kind::Fixed> {
     fn from(system_time: crate::SystemTime) -> Self {
         match system_time.duration_since(crate::SystemTime::UNIX_EPOCH) {
@@ -1184,7 +1192,11 @@ impl From<crate::SystemTime> for DateTime<offset_kind::Fixed> {
     }
 }
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
 impl Sub<crate::SystemTime> for DateTime<offset_kind::Fixed> {
     type Output = Duration;
 
@@ -1193,7 +1205,11 @@ impl Sub<crate::SystemTime> for DateTime<offset_kind::Fixed> {
     }
 }
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
 impl Sub<DateTime<offset_kind::Fixed>> for crate::SystemTime {
     type Output = Duration;
 

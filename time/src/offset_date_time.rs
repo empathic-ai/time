@@ -20,7 +20,11 @@ use crate::formatting::Formattable;
 use crate::parsing::Parsable;
 use crate::{error, Date, DateTime, Duration, Month, PrimitiveDateTime, Time, UtcOffset, Weekday};
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
 use crate::SystemTime;
 
 /// The actual type doing all the work.
@@ -1099,7 +1103,11 @@ impl Sub<SystemTime> for OffsetDateTime {
     }
 }
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
 impl Sub<SystemTime> for OffsetDateTime {
     type Output = Duration;
 
@@ -1181,15 +1189,22 @@ impl From<OffsetDateTime> for js_sys::Date {
     }
 }
 
-#[cfg(not(feature = "std"))]
-impl From<OffsetDateTime> for crate::SystemTime {
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
+impl From<OffsetDateTime> for SystemTime {
     fn from(datetime: OffsetDateTime) -> Self {
         datetime.0.into()
     }
 }
 
-
-#[cfg(not(feature = "std"))]
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
 impl From<SystemTime> for OffsetDateTime {
     fn from(system_time: SystemTime) -> Self {
         Self(Inner::from(system_time))
