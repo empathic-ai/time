@@ -453,6 +453,10 @@ impl Duration {
         )
     }
 
+    pub fn from_secs(seconds: i32) -> Self {
+        Self::seconds_f32(seconds as f32)
+    }
+
     /// Creates a new `Duration` from the specified number of seconds represented as `f32`.
     ///
     /// ```rust
