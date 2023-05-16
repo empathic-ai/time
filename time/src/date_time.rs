@@ -14,7 +14,19 @@ use core::time::Duration as StdDuration;
 #[cfg(feature = "formatting")]
 use std::io;
 #[cfg(feature = "std")]
+#[cfg(not(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+)))]
 use std::time::SystemTime;
+
+#[cfg(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+))]
+use crate::SystemTime;
 
 use crate::convert::*;
 use crate::date::{MAX_YEAR, MIN_YEAR};
@@ -1161,60 +1173,6 @@ impl From<DateTime<offset_kind::Fixed>> for js_sys::Date {
         let timestamp =
             (datetime.unix_timestamp_nanos() / Nanosecond.per(Millisecond) as i128) as f64;
         js_sys::Date::new(&timestamp.into())
-    }
-}
-
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-impl From<DateTime<offset_kind::Fixed>> for crate::SystemTime {
-    fn from(datetime: DateTime<offset_kind::Fixed>) -> Self {
-        // new Date() takes milliseconds
-        let timestamp =
-            (datetime.unix_timestamp_nanos() / Nanosecond.per(Millisecond) as i128) as f64;
-            crate::SystemTime::new(timestamp as i64)
-    }
-}
-
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-impl From<crate::SystemTime> for DateTime<offset_kind::Fixed> {
-    fn from(system_time: crate::SystemTime) -> Self {
-        match system_time.duration_since(crate::SystemTime::UNIX_EPOCH) {
-            Ok(duration) => Self::UNIX_EPOCH + duration,
-            Err(err) => Self::UNIX_EPOCH - err.duration(),
-        }
-    }
-}
-
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-impl Sub<crate::SystemTime> for DateTime<offset_kind::Fixed> {
-    type Output = Duration;
-
-    fn sub(self, rhs: crate::SystemTime) -> Self::Output {
-        self - Self::from(rhs)
-    }
-}
-
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-impl Sub<DateTime<offset_kind::Fixed>> for crate::SystemTime {
-    type Output = Duration;
-
-    fn sub(self, rhs: DateTime<offset_kind::Fixed>) -> Self::Output {
-        DateTime::<offset_kind::Fixed>::from(self) - rhs
     }
 }
 

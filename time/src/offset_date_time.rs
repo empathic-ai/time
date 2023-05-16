@@ -11,6 +11,11 @@ use core::time::Duration as StdDuration;
 #[cfg(feature = "formatting")]
 use std::io;
 #[cfg(feature = "std")]
+#[cfg(not(all(
+    target_family = "wasm",
+    not(any(target_os = "emscripten", target_os = "wasi")),
+    feature = "wasm-bindgen"
+)))]
 use std::time::SystemTime;
 
 use crate::date_time::offset_kind;
@@ -1103,19 +1108,6 @@ impl Sub<SystemTime> for OffsetDateTime {
     }
 }
 
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-impl Sub<SystemTime> for OffsetDateTime {
-    type Output = Duration;
-
-    fn sub(self, rhs: SystemTime) -> Self::Output {
-        self.0.sub(rhs)
-    }
-}
-
 #[cfg(feature = "std")]
 impl Sub<OffsetDateTime> for SystemTime {
     type Output = Duration;
@@ -1186,28 +1178,6 @@ impl From<js_sys::Date> for OffsetDateTime {
 impl From<OffsetDateTime> for js_sys::Date {
     fn from(datetime: OffsetDateTime) -> Self {
         datetime.0.into()
-    }
-}
-
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-impl From<OffsetDateTime> for SystemTime {
-    fn from(datetime: OffsetDateTime) -> Self {
-        datetime.0.into()
-    }
-}
-
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-impl From<SystemTime> for OffsetDateTime {
-    fn from(system_time: SystemTime) -> Self {
-        Self(Inner::from(system_time))
     }
 }
 // endregion trait impls
