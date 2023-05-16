@@ -1181,4 +1181,10 @@ impl From<OffsetDateTime> for js_sys::Date {
     }
 }
 
+#[cfg(not(feature = "std"))]
+impl From<OffsetDateTime> for crate::SystemTime {
+    fn from(datetime: OffsetDateTime) -> Self {
+        datetime.0.into()
+    }
+}
 // endregion trait impls
