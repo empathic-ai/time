@@ -14,19 +14,14 @@ use core::time::Duration as StdDuration;
 #[cfg(feature = "formatting")]
 use std::io;
 #[cfg(feature = "std")]
-#[cfg(not(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-)))]
 use std::time::SystemTime;
 
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-use crate::SystemTime;
+//#[cfg(all(
+//    target_family = "wasm",
+//    not(any(target_os = "emscripten", target_os = "wasi")),
+//    feature = "wasm-bindgen"
+//))]
+//use crate::SystemTime;
 
 use crate::convert::*;
 use crate::date::{MAX_YEAR, MIN_YEAR};

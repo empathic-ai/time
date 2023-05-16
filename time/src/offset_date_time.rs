@@ -11,11 +11,6 @@ use core::time::Duration as StdDuration;
 #[cfg(feature = "formatting")]
 use std::io;
 #[cfg(feature = "std")]
-#[cfg(not(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-)))]
 use std::time::SystemTime;
 
 use crate::date_time::offset_kind;
@@ -25,12 +20,12 @@ use crate::formatting::Formattable;
 use crate::parsing::Parsable;
 use crate::{error, Date, DateTime, Duration, Month, PrimitiveDateTime, Time, UtcOffset, Weekday};
 
-#[cfg(all(
-    target_family = "wasm",
-    not(any(target_os = "emscripten", target_os = "wasi")),
-    feature = "wasm-bindgen"
-))]
-use crate::SystemTime;
+//#[cfg(all(
+//    target_family = "wasm",
+//    not(any(target_os = "emscripten", target_os = "wasi")),
+//    feature = "wasm-bindgen"
+//))]
+//use crate::SystemTime;
 
 /// The actual type doing all the work.
 type Inner = DateTime<offset_kind::Fixed>;
