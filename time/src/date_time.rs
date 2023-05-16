@@ -1163,4 +1163,43 @@ impl From<DateTime<offset_kind::Fixed>> for js_sys::Date {
         js_sys::Date::new(&timestamp.into())
     }
 }
+
+#[cfg(not(feature = "std"))]
+impl From<DateTime<offset_kind::Fixed>> for crate::SystemTime {
+    fn from(datetime: DateTime<offset_kind::Fixed>) -> Self {
+        // new Date() takes milliseconds
+        let timestamp =
+            (datetime.unix_timestamp_nanos() / Nanosecond.per(Millisecond) as i128) as f64;
+            crate::SystemTime::new(timestamp as i64)
+    }
+}
+
+#[cfg(not(feature = "std"))]
+impl From<crate::SystemTime> for DateTime<offset_kind::Fixed> {
+    fn from(system_time: crate::SystemTime) -> Self {
+        match system_time.duration_since(crate::SystemTime::UNIX_EPOCH) {
+            Ok(duration) => Self::UNIX_EPOCH + duration,
+            Err(err) => Self::UNIX_EPOCH - err.duration(),
+        }
+    }
+}
+
+#[cfg(not(feature = "std"))]
+impl Sub<crate::SystemTime> for DateTime<offset_kind::Fixed> {
+    type Output = Duration;
+
+    fn sub(self, rhs: crate::SystemTime) -> Self::Output {
+        self - Self::from(rhs)
+    }
+}
+
+#[cfg(not(feature = "std"))]
+impl Sub<DateTime<offset_kind::Fixed>> for crate::SystemTime {
+    type Output = Duration;
+
+    fn sub(self, rhs: DateTime<offset_kind::Fixed>) -> Self::Output {
+        DateTime::<offset_kind::Fixed>::from(self) - rhs
+    }
+}
+
 // endregion trait impls

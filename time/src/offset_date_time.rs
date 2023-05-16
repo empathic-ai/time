@@ -20,6 +20,9 @@ use crate::formatting::Formattable;
 use crate::parsing::Parsable;
 use crate::{error, Date, DateTime, Duration, Month, PrimitiveDateTime, Time, UtcOffset, Weekday};
 
+#[cfg(not(feature = "std"))]
+use crate::SystemTime;
+
 /// The actual type doing all the work.
 type Inner = DateTime<offset_kind::Fixed>;
 
@@ -1088,6 +1091,15 @@ impl Sub for OffsetDateTime {
 }
 
 #[cfg(feature = "std")]
+impl Sub<SystemTime> for OffsetDateTime {
+    type Output = Duration;
+
+    fn sub(self, rhs: SystemTime) -> Self::Output {
+        self.0.sub(rhs)
+    }
+}
+
+#[cfg(not(feature = "std"))]
 impl Sub<SystemTime> for OffsetDateTime {
     type Output = Duration;
 

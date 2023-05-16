@@ -42,6 +42,7 @@ wasm-bindgen = ["dep:js-sys"]
 # feature gate.
 [dependencies]
 itoa = { workspace = true, optional = true }
+js-sys = "0.3.63"
 quickcheck = { workspace = true, optional = true }
 rand = { workspace = true, optional = true }
 serde = { workspace = true, optional = true }
