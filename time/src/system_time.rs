@@ -26,8 +26,16 @@ impl SystemTime {
 	/// See [`std::time::SystemTime::now()`].
 	#[must_use]
 	pub fn now() -> Self {
+		#[cfg(all(
+			target_family = "wasm",
+			not(any(target_os = "emscripten", target_os = "wasi")),
+			feature = "wasm-bindgen"
+		))]
 		#[allow(clippy::as_conversions)]
-		Self(js_sys::Date::now() as i64)
+		return Self(js_sys::Date::now() as i64);
+
+		#[cfg(feature = "std")]
+		return Self(std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64);
 	}
 
 	/// See [`std::time::SystemTime::duration_since()`].
