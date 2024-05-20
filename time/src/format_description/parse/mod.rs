@@ -63,6 +63,7 @@ pub fn parse_borrowed<const VERSION: usize>(
         .collect::<Result<_, _>>()?)
 }
 
+
 /// Parse a sequence of items from the format description.
 ///
 /// The syntax for the format description can be found in [the
@@ -80,9 +81,7 @@ pub fn parse_owned<const VERSION: usize>(
     let mut lexed = lexer::lex::<VERSION>(s.as_bytes());
     let ast = ast::parse::<_, VERSION>(&mut lexed);
     let format_items = format_item::parse(ast);
-    let items = format_items
-        .map(|res| res.map(Into::into))
-        .collect::<Result<Box<_>, _>>()?;
+    let items = format_items.collect::<Result<Box<_>, _>>()?;
     Ok(items.into())
 }
 
