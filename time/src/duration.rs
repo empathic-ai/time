@@ -682,7 +682,7 @@ impl Duration {
     /// assert_eq!((-6).days().whole_weeks(), 0);
     /// ```
     pub const fn whole_weeks(self) -> i64 {
-        self.whole_seconds() / Second.per(Week) as i64
+        self.as_secs() / Second.per(Week) as i64
     }
 
     /// Get the number of whole days in the duration.
@@ -695,7 +695,7 @@ impl Duration {
     /// assert_eq!((-23).hours().whole_days(), 0);
     /// ```
     pub const fn whole_days(self) -> i64 {
-        self.whole_seconds() / Second.per(Day) as i64
+        self.as_secs() / Second.per(Day) as i64
     }
 
     /// Get the number of whole hours in the duration.
@@ -708,7 +708,7 @@ impl Duration {
     /// assert_eq!((-59).minutes().whole_hours(), 0);
     /// ```
     pub const fn whole_hours(self) -> i64 {
-        self.whole_seconds() / Second.per(Hour) as i64
+        self.as_secs() / Second.per(Hour) as i64
     }
 
     /// Get the number of whole minutes in the duration.
@@ -721,7 +721,7 @@ impl Duration {
     /// assert_eq!((-59).seconds().whole_minutes(), 0);
     /// ```
     pub const fn whole_minutes(self) -> i64 {
-        self.whole_seconds() / Second.per(Minute) as i64
+        self.as_secs() / Second.per(Minute) as i64
     }
 
     /// Get the number of whole seconds in the duration.
@@ -733,7 +733,7 @@ impl Duration {
     /// assert_eq!(1.minutes().whole_seconds(), 60);
     /// assert_eq!((-1).minutes().whole_seconds(), -60);
     /// ```
-    pub const fn whole_seconds(self) -> i64 {
+    pub const fn as_secs(self) -> i64 {
         self.seconds
     }
 

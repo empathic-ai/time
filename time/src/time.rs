@@ -346,7 +346,7 @@ impl Time {
     pub(crate) const fn adjusting_add(self, duration: Duration) -> (DateAdjustment, Self) {
         let mut nanoseconds = self.nanosecond as i32 + duration.subsec_nanoseconds();
         let mut seconds =
-            self.second as i8 + (duration.whole_seconds() % Second.per(Minute) as i64) as i8;
+            self.second as i8 + (duration.as_secs() % Second.per(Minute) as i64) as i8;
         let mut minutes =
             self.minute as i8 + (duration.whole_minutes() % Minute.per(Hour) as i64) as i8;
         let mut hours = self.hour as i8 + (duration.whole_hours() % Hour.per(Day) as i64) as i8;
@@ -379,7 +379,7 @@ impl Time {
     pub(crate) const fn adjusting_sub(self, duration: Duration) -> (DateAdjustment, Self) {
         let mut nanoseconds = self.nanosecond as i32 - duration.subsec_nanoseconds();
         let mut seconds =
-            self.second as i8 - (duration.whole_seconds() % Second.per(Minute) as i64) as i8;
+            self.second as i8 - (duration.as_secs() % Second.per(Minute) as i64) as i8;
         let mut minutes =
             self.minute as i8 - (duration.whole_minutes() % Minute.per(Hour) as i64) as i8;
         let mut hours = self.hour as i8 - (duration.whole_hours() % Hour.per(Day) as i64) as i8;
