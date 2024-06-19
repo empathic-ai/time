@@ -1125,6 +1125,15 @@ impl From<SystemTime> for DateTime<offset_kind::Fixed> {
     }
 }
 
+impl From<crate::SystemTime> for DateTime<offset_kind::Fixed> {
+    fn from(system_time: crate::SystemTime) -> Self {
+        match system_time.duration_since(crate::SystemTime::UNIX_EPOCH) {
+            Ok(duration) => Self::UNIX_EPOCH + duration,
+            Err(err) => Self::UNIX_EPOCH - err.duration(),
+        }
+    }
+}
+
 #[allow(clippy::fallible_impl_from)] // caused by `debug_assert!`
 #[cfg(feature = "std")]
 impl From<DateTime<offset_kind::Fixed>> for SystemTime {
