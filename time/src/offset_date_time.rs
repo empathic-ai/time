@@ -1153,9 +1153,14 @@ impl From<crate::SystemTime> for OffsetDateTime {
     }
 }
 
-
 #[cfg(feature = "std")]
 impl From<OffsetDateTime> for SystemTime {
+    fn from(datetime: OffsetDateTime) -> Self {
+        datetime.0.into()
+    }
+}
+
+impl From<OffsetDateTime> for crate::SystemTime {
     fn from(datetime: OffsetDateTime) -> Self {
         datetime.0.into()
     }

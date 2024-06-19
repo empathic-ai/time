@@ -1151,6 +1151,21 @@ impl From<DateTime<offset_kind::Fixed>> for SystemTime {
     }
 }
 
+impl From<DateTime<offset_kind::Fixed>> for crate::SystemTime {
+    fn from(datetime: DateTime<offset_kind::Fixed>) -> Self {
+        let duration = datetime - DateTime::<offset_kind::Fixed>::UNIX_EPOCH;
+
+        if duration.is_zero() {
+            Self::UNIX_EPOCH
+        } else if duration.is_positive() {
+            Self::UNIX_EPOCH + duration.unsigned_abs()
+        } else {
+            debug_assert!(duration.is_negative());
+            Self::UNIX_EPOCH - duration.unsigned_abs()
+        }
+    }
+}
+
 #[allow(clippy::fallible_impl_from)]
 #[cfg(all(
     target_family = "wasm",
