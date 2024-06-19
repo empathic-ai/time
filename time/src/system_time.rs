@@ -70,7 +70,12 @@ impl SystemTime {
 	}
 
 	/// See [`std::time::SystemTime::checked_sub()`].
-	pub fn checked_sub(&self, duration: Duration) -> Option<Self> {
+	pub fn checked_sub_std(&self, duration: Duration) -> Option<Self> {
+		let duration = duration.as_millis().try_into().ok()?;
+		self.0.checked_sub(duration).map(SystemTime)
+	}
+
+    pub fn checked_sub(&self, duration: crate::Duration) -> Option<Self> {
 		let duration = duration.as_millis().try_into().ok()?;
 		self.0.checked_sub(duration).map(SystemTime)
 	}
@@ -114,7 +119,7 @@ impl Sub<Duration> for SystemTime {
 	type Output = Self;
 
 	fn sub(self, dur: Duration) -> Self {
-		self.checked_sub(dur)
+		self.checked_sub_std(dur)
 			.expect("overflow when subtracting duration from instant")
 	}
 }
