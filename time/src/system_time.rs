@@ -58,7 +58,13 @@ impl SystemTime {
 	}
 
 	/// See [`std::time::SystemTime::checked_add()`].
-	pub fn checked_add(&self, duration: Duration) -> Option<Self> {
+	pub fn checked_add_std(&self, duration: Duration) -> Option<Self> {
+		let duration = duration.as_millis().try_into().ok()?;
+		self.0.checked_add(duration).map(SystemTime)
+	}
+
+    	/// See [`std::time::SystemTime::checked_add()`].
+	pub fn checked_add(&self, duration: crate::Duration) -> Option<Self> {
 		let duration = duration.as_millis().try_into().ok()?;
 		self.0.checked_add(duration).map(SystemTime)
 	}
@@ -70,7 +76,7 @@ impl SystemTime {
 	}
 }
 
-impl Add<Duration> for SystemTime {
+impl Add<crate::Duration> for SystemTime {
 	type Output = Self;
 
 	/// # Panics
@@ -78,8 +84,22 @@ impl Add<Duration> for SystemTime {
 	/// This function may panic if the resulting point in time cannot be
 	/// represented by the underlying data structure. See
 	/// [`SystemTime::checked_add`] for a version without panic.
-	fn add(self, dur: Duration) -> Self {
+	fn add(self, dur: crate::Duration) -> Self {
 		self.checked_add(dur)
+			.expect("overflow when adding duration to instant")
+	}
+}
+
+impl Add<Duration> for SystemTime {
+	type Output = Self;
+
+	/// # Panics
+	///
+	/// This function may panic if the resulting point in time cannot be
+	/// represented by the underlying data structure. See
+	/// [`SystemTime::checked_add_std`] for a version without panic.
+	fn add(self, dur: Duration) -> Self {
+		self.checked_add_std(dur)
 			.expect("overflow when adding duration to instant")
 	}
 }
