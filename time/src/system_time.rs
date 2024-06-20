@@ -6,6 +6,7 @@
 use core::fmt::{self, Display, Formatter};
 //use std::ops::{Add, AddAssign, Sub, SubAssign};
 use core::ops::{Add, AddAssign, Sub, SubAssign};
+use std::alloc::System;
 use std::time::Duration;
 //use crate::{Duration};
 
@@ -128,6 +129,18 @@ impl SubAssign<Duration> for SystemTime {
 	fn sub_assign(&mut self, other: Duration) {
 		*self = *self - other;
 	}
+}
+
+impl From<SystemTime> for std::time::SystemTime {
+    fn from(value: SystemTime) -> Self {
+        Self::UNIX_EPOCH + value.duration_since(SystemTime::UNIX_EPOCH).unwrap()
+    }
+}
+
+impl From<std::time::SystemTime> for SystemTime {
+    fn from(value: std::time::SystemTime) -> Self {
+        Self::UNIX_EPOCH + value.duration_since(std::time::SystemTime::UNIX_EPOCH).unwrap()
+    }
 }
 
 /// See [`std::time::SystemTimeError`].
